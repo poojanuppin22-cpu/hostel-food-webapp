@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Leftover Records</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="topbar">
+    <img src="logo.png" class="logo" alt="Logo" onerror="this.style.display='none'">
+    <div>
+      <button class="btn" onclick="location.href='admin.html'">Back to Admin</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card">
+      <h3>Leftover Food Records</h3>
+      <ul id="leftListPage" class="plist"></ul>
+      <h3 style="margin-top:12px">Charts</h3>
+      <canvas id="leftPiePage" width="420" height="220"></canvas>
+      <canvas id="leftBarPage" width="420" height="220" style="margin-top:10px"></canvas>
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+  <script>
+    function renderLeftoverPage(){
+      const left = JSON.parse(localStorage.getItem('leftover')||'[]');
+      const box = document.getElementById('leftListPage');
+      box.innerHTML = '';
+      left.slice().reverse().forEach(l=>{
+        const li = document.createElement('li');
+        li.innerHTML = `${l.food} — ${l.qty} kg <small class="small-muted">${l.at}</small>`;
+        box.appendChild(li);
+      });
+      if (typeof drawPie === 'function' && typeof drawBar === 'function'){
+        drawPie('leftPiePage');
+        drawBar('leftBarPage');
+      }
+    }
+    renderLeftoverPage();
+  </script>
+</body>
+</html>

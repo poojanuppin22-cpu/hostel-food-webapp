@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin - Hostel Food</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .tabs { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:12px; }
+    .tab-btn { padding:8px 12px; border-radius:8px; background:#f0f4ff; border:1px solid #d7defe; cursor:pointer; }
+    .tab-btn.active { background: linear-gradient(135deg,#304ffe,#6a86ff); color:white; box-shadow:0 6px 20px rgba(48,79,254,0.12); }
+    .admin-grid { display:grid; grid-template-columns: 1fr 380px; gap:14px; align-items:start; }
+    .checkbox-list { border:1px solid #e3e7ff; border-radius:8px; padding:8px; max-height:260px; overflow:auto; background:#fff; }
+    .food-checkbox-item { display:flex; gap:10px; align-items:center; padding:6px; border-bottom:1px solid #f0f0f0;}
+    .food-checkbox-item:last-child{ border-bottom:none; }
+    .small-muted { color:#666; font-size:13px; }
+    .plist li { display:flex; justify-content:space-between; align-items:center; padding:6px 4px; border-bottom:1px dashed #eee; }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="top-left">
+      <img src="logo.png" class="logo" alt="Logo" onerror="this.style.display='none'">
+      <h2>Admin Dashboard</h2>
+    </div>
+    <div class="top-right">
+      <button class="btn" onclick="logout()">Logout</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="admin-grid">
+      <section class="card">
+        <div class="tabs" role="tablist" aria-label="admin menu">
+          <button class="tab-btn active" data-target="menuPanel" onclick="openTab(event)">Menu</button>
+          <button class="tab-btn" data-target="studentsPanel" onclick="openTab(event)">Students</button>
+          <button class="tab-btn" data-target="requestsPanel" onclick="openTab(event)">Requests</button>
+          <button class="tab-btn" data-target="leftoverPanel" onclick="openTab(event)">Leftover</button>
+          <button class="tab-btn" data-target="feedbackPanel" onclick="openTab(event)">Feedback</button>
+          <button class="tab-btn" data-target="attendancePanel" onclick="openTab(event)">Attendance</button>
+          <button class="tab-btn" data-target="chartsPanel" onclick="openTab(event)">Charts</button>
+          <button class="tab-btn" data-target="prepPanel" onclick="openTab(event)">Preparation</button>
+        </div>
+
+        <!-- MENU -->
+        <div id="menuPanel" class="panel">
+          <h3>Menu Management</h3>
+          
+          <div class="row" style="align-items:center; gap:10px; margin-bottom:8px;">
+            <label for="menuMealSelect">Meal</label>
+            <select id="menuMealSelect" onchange="populateMasterSelect()">
+              <option value="tiffin">Tiffin</option>
+              <option value="lunch">Lunch</option>
+              <option value="dinner">Dinner</option>
+              <option value="snack">Snack</option>
+            </select>
+
+            <button class="btn" onclick="populateMasterSelect()">Load</button>
+            <button class="btn secondary" onclick="clearMenu()">Clear Menu</button>
+          </div>
+
+          <div style="display:flex; gap:12px;">
+            <div style="flex:1">
+              <div id="checkboxFoodList" class="checkbox-list" aria-live="polite">
+                <!-- checkboxes inserted here by script.js using class "masterCheck" -->
+              </div>
+
+              <div style="margin-top:8px;">
+                <button class="btn" onclick="addSelectedFoods()">Add Selected Items</button>
+                <button class="btn secondary" onclick="showOtherInput()">Add Other</button>
+              </div>
+
+              <div id="otherRow" style="display:none; margin-top:8px;">
+                <input id="otherName" placeholder="Custom food name" />
+                <select id="otherType"><option value="veg">Veg</option><option value="non-veg">Non-Veg</option></select>
+                <button class="btn" onclick="addOtherToMaster()">Save & Add</button>
+                <button class="btn secondary" onclick="hideOtherInput()">Cancel</button>
+              </div>
+            </div>
+
+            <div style="width:360px">
+              <h4>Current Menu</h4>
+              <div><strong>Tiffin</strong> (<span id="count_tiffin">0</span>)</div>
+              <ul id="list_tiffin" class="plist"></ul>
+
+              <div><strong>Lunch</strong> (<span id="count_lunch">0</span>)</div>
+              <ul id="list_lunch" class="plist"></ul>
+
+              <div><strong>Dinner</strong> (<span id="count_dinner">0</span>)</div>
+              <ul id="list_dinner" class="plist"></ul>
+
+              <div><strong>Snacks</strong> (<span id="count_snack">0</span>)</div>
+              <ul id="list_snack" class="plist"></ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- STUDENTS -->
+        <div id="studentsPanel" class="panel" style="display:none;">
+          <h3>Students</h3>
+          <div class="row" style="gap:8px; margin-bottom:8px;">
+            <input id="newStudentName" placeholder="Username">
+            <input id="newStudentPwd" placeholder="Password">
+            <button class="btn" onclick="addStudent()">Add</button>
+          </div>
+          <h4>List</h4>
+          <ul id="studentList" class="plist"></ul>
+        </div>
+
+        <!-- REQUESTS -->
+        <div id="requestsPanel" class="panel" style="display:none;">
+          <h3>Pending Access</h3>
+          <ul id="requestsList" class="plist"></ul>
+        </div>
+
+        <!-- LEFTOVER -->
+        <div id="leftoverPanel" class="panel" style="display:none;">
+          <h3>Leftover</h3>
+          <div class="pickup-box">
+            <h4>Food Donation Pickup</h4>
+            <h4>Yashoda trust</h4>
+            <p>Call: <strong>+91 8123264845 </strong></p>
+            <h4>Public fridge</h4>
+            <p>You can drop the remaining food in public fridge in BTM Layout and Shatinagar </p>
+          </div>
+
+          <div class="row" style="gap:8px; align-items:center; margin-bottom:8px;">
+            <input id="leftFood" placeholder="Food name" />
+            <input id="leftQty" type="number" placeholder="Quantity (kg)" />
+            <button class="btn" onclick="saveLeftover()">Save</button>
+            <button class="btn secondary" onclick="clearLeftover()">Clear</button>
+            <button class="btn secondary" onclick="toggleLeftFromMenu()">From Menu</button>
+          </div>
+
+          <div id="leftFromMenu" style="display:none; margin-bottom:8px;">
+            <select id="leftFromMenuSelect"></select>
+            <button class="btn" onclick="useLeftFromMenu()">Use</button>
+            <button class="btn secondary" onclick="toggleLeftFromMenu()">Cancel</button>
+          </div>
+
+          <h4>Recent Leftovers</h4>
+          <ul id="leftListAdmin" class="plist"></ul>
+        </div>
+
+        <!-- FEEDBACK -->
+        <div id="feedbackPanel" class="panel" style="display:none;">
+          <h3>Feedback & Votes</h3>
+          <div>Average Rating: <strong id="avgRating">—</strong></div>
+          <div style="margin-top:8px;">
+            <button class="btn secondary" onclick="clearRatings()">Clear Ratings</button>
+            <button class="btn secondary" onclick="clearVotes()">Clear Votes</button>
+          </div>
+
+          <h4 style="margin-top:10px">Low Ratings & Reviews</h4>
+            <ul id="lowRatingReviews" class="plist"></ul>
+
+
+          <h4 style="margin-top:10px">Votes</h4>
+          <div>Total Votes: <strong id="voteCount">0</strong></div>
+          <div style="margin-top:6px" id="topFoodDetails" class="small-muted"></div>
+          
+        </div>
+
+        <!-- ATTENDANCE -->
+        <div id="attendancePanel" class="panel" style="display:none;">
+          <h3>Attendance</h3>
+          <button class="btn secondary" onclick="clearAttendance()">Clear Attendance</button>
+          <h4>Recent</h4>
+          <ul id="attListAdmin" class="plist"></ul>
+          <h4 style="margin-top:8px">Summary</h4>
+          <ul id="mealSummary" class="plist"></ul>
+        </div>
+        <!-- FOOD PREPARATION -->
+        <div id="prepPanel" class="panel" style="display:none;">
+          <h3>Food Preparation Suggestion</h3>
+
+          <label>Select Meal:</label>
+          <select id="prepMealSelect" onchange="updatePrepSuggestion()">
+            <option value="tiffin">Tiffin</option>
+            <option value="lunch" selected>Lunch</option>
+            <option value="dinner">Dinner</option>
+          </select>
+
+          <label style="margin-left:10px;">Qty per student (kg):</label>
+          <input id="perStudentQty" type="number" value="0.35" step="0.05" onchange="updatePrepSuggestion()">
+
+          <div id="prepSuggestion" style="margin-top:12px; font-size:15px;"></div>
+        </div>
+        <!-- CHARTS -->
+            <section id="chartsPanel" class="panel card">
+            <h3>Leftover Charts</h3>
+
+            <div style="display:flex; gap:20px; flex-wrap:wrap;">
+                <div>
+                    <h4>Pie Chart</h4>
+                    <canvas id="leftPie" width="360" height="220"></canvas>
+                </div>
+
+                <div>
+                    <h4>Bar Chart</h4>
+                    <canvas id="leftBar" width="360" height="220"></canvas>
+                </div>
+            </div>
+        </section>
+
+
+      <aside>
+        <div class="card">
+          <h3>Quick Stats</h3>
+          <div>Students: <strong id="statStudents">0</strong></div>
+          <div>Votes: <strong id="statVotes">0</strong></div>
+          <div>Leftover records: <strong id="statLeft">0</strong></div>
+        </div>
+
+        
+      </aside>
+    </div>
+  </main>
+
+  <script src="script.js"></script>
+  <script>
+if (localStorage.getItem('role') !== 'admin') {
+  location.href = 'index.html';
+} else {
+  function openAdminTab(evt){
+    const btn = evt.currentTarget || evt;
+    const target = btn.getAttribute('data-target');
+    document.querySelectorAll('.tab-btn').forEach(b=> b.classList.remove('active'));
+    document.querySelectorAll('.admin-panel').forEach(p=> { 
+      p.classList.remove('active'); 
+      p.style.display = 'none'; 
+    });
+
+    const activeBtn = document.querySelector('.tab-btn[data-target="'+target+'"]');
+    if(activeBtn) activeBtn.classList.add('active');
+
+    const panel = document.getElementById(target);
+    if(panel){ panel.classList.add('active'); panel.style.display = ''; }
+
+    try{ renderAdmin(); } catch(e){ console.error(e); }
+  }
+  
+
+
+  // OPEN REQUEST PANEL FIRST ALWAYS
+  window.onload = () => {
+    const reqBtn = document.querySelector('.tab-btn[data-target="requestsPanel"]');
+    if(reqBtn) reqBtn.click();
+  };
+}
+</script>
+
+</body>
+</html>

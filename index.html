@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Hostel Food - Login</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar-small">
+    <div class="left">
+      <img src="logo.png" class="logo-small" alt="Logo" onerror="this.style.display='none'">
+      <h1>Hostel Food Management 🍽️</h1>
+    </div>
+  </header>
+
+  <main class="centered">
+    <div class="login-card card">
+      <img src="admin.png" alt="logo" style="height:60px; margin-bottom:8px" onerror="this.style.display='none'">
+      <h2>Sign In</h2>
+
+      <input class="login-input" id="username" placeholder="Username" />
+      <input class="login-input" id="password" placeholder="Password" type="password" />
+
+      <div class="row" style="gap:12px; justify-content:center; margin-top:8px;">
+        <button class="btn" onclick="handleLogin()">Login</button>
+        
+      </div>
+
+      <hr style="margin:14px 0">
+
+      <h3>Request Student Access</h3>
+      <input class="login-input" id="reqName" placeholder="Your name" />
+      <input class="login-input" id="reqPwd" placeholder="Set password" />
+      <button class="btn" onclick="requestAccess()">Request Access</button>
+
+      
+    </div>
+  </main>
+
+  <footer class="footer">
+    <img src="student.png" alt="student" class="footer-icon" onerror="this.style.display='none'">
+    <img src="menu.png" alt="menu" class="footer-icon" onerror="this.style.display='none'">
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Student - Hostel Food</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .stars button { font-size:20px; background:none; border:none; cursor:pointer; }
+    .meal-block { margin-top:12px; }
+    .select-full { width:100%; padding:8px; border-radius:8px; border:1px solid #d6d9ef; }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="top-left">
+      <img src="logo.png" class="logo" alt="Logo" onerror="this.style.display='none'">
+      <h2>Student Portal</h2>
+    </div>
+    <div class="top-right">
+      <button class="btn" onclick="logout()">Logout</button>
+    </div>
+  </header>
+
+  <main class="container centered-col">
+    <section class="card" style="width:740px;">
+      <h3>Welcome, <span id="studentNameHeading"></span></h3>
+
+      <div>
+        <h4>Tiffin</h4>
+        <select id="voteTiffin" class="select-full"></select>
+        <button class="btn" onclick="submitVoteMeal('tiffin')">Vote</button>
+      </div>
+
+      <div>
+        <h4>Lunch</h4>
+        <select id="voteLunch" class="select-full"></select>
+        <button class="btn" onclick="submitVoteMeal('lunch')">Vote</button>
+      </div>
+
+      <div>
+        <h4>Dinner</h4>
+        <select id="voteDinner" class="select-full"></select>
+        <button class="btn" onclick="submitVoteMeal('dinner')">Vote</button>
+      </div>
+
+      <div id="snackBlock" style="display:none;">
+        <h4>Snack (optional)</h4>
+        <select id="voteSnack" class="select-full"></select>
+        <button class="btn" onclick="submitVoteMeal('snack')">Vote</button>
+      </div>
+
+      <div style="margin-top:14px;">
+        <h4>Rate Yesterday's Food</h4>
+        <div class="stars">
+          <button onclick="rateFood(1)">⭐</button>
+          <button onclick="rateFood(2)">⭐⭐</button>
+          <button onclick="rateFood(3)">⭐⭐⭐</button>
+          <button onclick="rateFood(4)">⭐⭐⭐⭐</button>
+          <button onclick="rateFood(5)">⭐⭐⭐⭐⭐</button>
+        </div>
+      </div>
+
+
+      <div style="margin-top:14px;">
+        <h4>Meal Attendance</h4>
+
+        <div class="meal-block">
+          <strong>Tiffin</strong>
+          <label><input type="checkbox" name="tiffin" value="Coming" onclick="toggleMeal('tiffin','Coming')"> Coming</label>
+          <label><input type="checkbox" name="tiffin" value="Not Coming" onclick="toggleMeal('tiffin','Not Coming')"> Not Coming</label>
+        </div>
+
+        <div class="meal-block">
+          <strong>Lunch</strong>
+          <label><input type="checkbox" name="lunch" value="Coming" onclick="toggleMeal('lunch','Coming')"> Coming</label>
+          <label><input type="checkbox" name="lunch" value="Not Coming" onclick="toggleMeal('lunch','Not Coming')"> Not Coming</label>
+        </div>
+
+        <div class="meal-block">
+          <strong>Snacks</strong>
+          <label><input type="checkbox" name="snacks" value="Coming" onclick="toggleMeal('snacks','Coming')"> Coming</label>
+          <label><input type="checkbox" name="snacks" value="Not Coming" onclick="toggleMeal('snacks','Not Coming')"> Not Coming</label>
+        </div>
+
+        <div class="meal-block">
+          <strong>Dinner</strong>
+          <label><input type="checkbox" name="dinner" value="Coming" onclick="toggleMeal('dinner','Coming')"> Coming</label>
+          <label><input type="checkbox" name="dinner" value="Not Coming" onclick="toggleMeal('dinner','Not Coming')"> Not Coming</label>
+        </div>
+
+        <div style="margin-top:12px;">
+          <button class="btn" onclick="submitMealAttendance()">Submit Attendance</button>
+        </div>
+      </div>
+
+    </section>
+  </main>
+
+  <script src="script.js"></script>
+  <script>
+    if(localStorage.getItem('role') !== 'student') location.href = 'index.html';
+    document.getElementById('studentNameHeading').innerText = localStorage.getItem('studentName') || 'Student';
+    loadStudentVoting();
+  </script>
+</body>
+</html>
